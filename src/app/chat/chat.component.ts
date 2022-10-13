@@ -34,8 +34,10 @@ export class ChatComponent implements OnInit {
         mensaje.fecha = new Date(mensaje.fecha);
         this.mensajes.push(mensaje);
       });
-    }
 
+      this.client.publish({destination: '/app/mensaje', body: JSON.stringify(this.mensaje)});
+    }
+    this.mensaje.tipo = 'NUEVO_USUARIO';
     this.client.onDisconnect = (frame) =>{
       console.log('Desconectados: '+this.client.connected+ ": "+frame);
       this.conectado = false;
@@ -44,7 +46,7 @@ export class ChatComponent implements OnInit {
 
   conectar(): void{
     //Metodo para conectarnos
-    console.log('ACTIVA');
+    //console.log('ACTIVA');
     this.client.activate();
   }
 
@@ -53,6 +55,7 @@ export class ChatComponent implements OnInit {
   }
 
   enviarMensaje(): void{
+    this.mensaje.tipo = 'MENSAJE';
     if(this.mensaje.texto!=='' || this.mensaje.texto!=null){
       this.client.publish({destination: '/app/mensaje', body: JSON.stringify(this.mensaje)});
       this.mensaje.texto = '';
