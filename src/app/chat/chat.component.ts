@@ -13,6 +13,7 @@ export class ChatComponent implements OnInit {
   conectado: boolean = false;
   mensaje: Mensaje = new Mensaje();
   mensajes: Mensaje[] = [];
+  escribiendo: string;
 
   constructor() { }
 
@@ -39,9 +40,16 @@ export class ChatComponent implements OnInit {
         
         this.mensajes.push(mensaje);
       });
-
+      
+      //suscripcion para escribiendo
+      this.client.subscribe('/chat/escribiendo', e => {
+        this.escribiendo = e.body;
+        //Despues de 3s se resetea escribiendo
+        setTimeout(() => this.escribiendo = '', 3000)
+      });
       this.client.publish({destination: '/app/mensaje', body: JSON.stringify(this.mensaje)});
     }
+
     this.mensaje.tipo = 'NUEVO_USUARIO';
     this.client.onDisconnect = (frame) =>{
       console.log('Desconectados: '+this.client.connected+ ": "+frame);
@@ -65,6 +73,10 @@ export class ChatComponent implements OnInit {
       this.client.publish({destination: '/app/mensaje', body: JSON.stringify(this.mensaje)});
       this.mensaje.texto = '';
     }
+  }
+  //Envia a /app/escribiendo el usuario
+  escribiendoEvento(): void{
+    this.client.publish({destination: '/app/escribiendo', body: this.mensaje.username});
   }
 
 }
