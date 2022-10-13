@@ -4,17 +4,17 @@
     <div class="card-header">
         <ul class="nav nav-pills nav-fill">
             <li class="nav-item">
-                <button class="btn btn-warning" type="button">Desconectar</button>
+                <button class="btn btn-warning" type="button" (click)="desconectar()" *ngIf="conectado">Desconectar</button>
             </li>
             <li class="nav-item mr-2">
-                <button class="btn btn-success" type="button">Conectar</button>
+                <button class="btn btn-success" type="button" (click)="conectar()" *ngIf="!conectado">Conectar</button>
             </li>
         </ul>
     </div>
 
-    <div class="card-body chat-body"></div>
+    <div class="card-body chat-body" *ngIf="conectado"></div>
 
-    <div class="card-footer">
+    <div class="card-footer" *ngIf="conectado">
         <form class="form-inline">
             <div class="form-group">
                 <input type="text" class="form-control" placeholder="Escribe un mensaje..." name="texto">
